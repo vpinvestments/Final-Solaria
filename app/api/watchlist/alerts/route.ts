@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { executeQuery } from "@/lib/db"
+import { executeQuery } from "@/lib/db-switch"
 
 // GET /api/watchlist/alerts - Get user's alerts
 export async function GET(request: NextRequest) {

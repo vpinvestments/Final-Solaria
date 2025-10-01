@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { executeQuery } from "@/lib/db"
+import { executeQuery } from "@/lib/db-switch"
 
 // PATCH /api/watchlist/[coinId] - Update watchlist item
 export async function PATCH(request: NextRequest, { params }: { params: { coinId: string } }) {

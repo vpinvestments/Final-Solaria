@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { executeQuery } from "@/lib/db"
+import { executeQuery } from "@/lib/db-switch"
 import { getTopCryptocurrencies } from "@/lib/crypto-api"
 
 // GET /api/watchlist - Get user's watchlist
