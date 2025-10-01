@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getDb } from "@/lib/db-local"
+import { executeQuery } from "@/lib/db"
 
 // GET /api/watchlist/alerts - Get user's alerts
 export async function GET(request: NextRequest) {
@@ -7,8 +7,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get("userId") || "1"
     const coinId = searchParams.get("coinId")
-
-    const db = getDb()
 
     let query = `
       SELECT * FROM price_alerts 
@@ -23,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     query += " ORDER BY created_date DESC"
 
-    const alerts = db.prepare(query).all(...params)
+    const alerts: any = await executeQuery(query, params)
 
     return NextResponse.json({
       success: true,
@@ -60,19 +58,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Invalid alert type" }, { status: 400 })
     }
 
-    const db = getDb()
-
-    const insertAlert = db.prepare(`
+    const result: any = await executeQuery(
+      `
       INSERT INTO price_alerts (user_id, coin_id, coin_name, coin_symbol, alert_type, target_value)
       VALUES (?, ?, ?, ?, ?, ?)
-    `)
-
-    const result = insertAlert.run(userId, coinId, coinName, coinSymbol, alertType, targetValue)
+    `,
+      [userId, coinId, coinName, coinSymbol, alertType, targetValue],
+    )
 
     return NextResponse.json({
       success: true,
       message: "Alert created",
-      id: result.lastInsertRowid,
+      id: result.insertId,
     })
   } catch (error) {
     console.error("[v0] Alert POST error:", error)
@@ -91,11 +88,9 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Missing alertId" }, { status: 400 })
     }
 
-    const db = getDb()
+    const result: any = await executeQuery("DELETE FROM price_alerts WHERE id = ? AND user_id = ?", [alertId, userId])
 
-    const result = db.prepare("DELETE FROM price_alerts WHERE id = ? AND user_id = ?").run(alertId, userId)
-
-    if (result.changes === 0) {
+    if (result.affectedRows === 0) {
       return NextResponse.json({ success: false, error: "Alert not found" }, { status: 404 })
     }
 

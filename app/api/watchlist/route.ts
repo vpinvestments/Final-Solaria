@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getDb } from "@/lib/db-local"
+import { executeQuery } from "@/lib/db"
 import { getTopCryptocurrencies } from "@/lib/crypto-api"
 
 // GET /api/watchlist - Get user's watchlist
@@ -8,18 +8,17 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get("userId") || "1" // Default to demo user
 
-    const db = getDb()
-
     // Get watchlist items with real-time price data
-    const watchlistItems = db
-      .prepare(`
+    const watchlistItems: any = await executeQuery(
+      `
       SELECT w.*, p.alert_type, p.target_value, p.is_active as alert_active
       FROM watchlist_items w
       LEFT JOIN price_alerts p ON w.coin_id = p.coin_id AND w.user_id = p.user_id AND p.is_active = 1
       WHERE w.user_id = ?
       ORDER BY w.is_favorite DESC, w.added_date DESC
-    `)
-      .all(userId)
+    `,
+      [userId],
+    )
 
     // Get unique coin IDs to fetch current market data
     const coinIds = [...new Set(watchlistItems.map((item: any) => item.coin_id))]
@@ -90,33 +89,36 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 })
     }
 
-    const db = getDb()
-
     // Check if item already exists
-    const existing = db.prepare("SELECT id FROM watchlist_items WHERE user_id = ? AND coin_id = ?").get(userId, coinId)
+    const existing: any = await executeQuery("SELECT id FROM watchlist_items WHERE user_id = ? AND coin_id = ?", [
+      userId,
+      coinId,
+    ])
 
-    if (existing) {
+    if (existing.length > 0) {
       return NextResponse.json({ success: false, error: "Item already in watchlist" }, { status: 409 })
     }
 
     // Add to watchlist
-    const insertWatchlist = db.prepare(`
+    const result: any = await executeQuery(
+      `
       INSERT INTO watchlist_items (user_id, coin_id, coin_name, coin_symbol, notes)
       VALUES (?, ?, ?, ?, ?)
-    `)
-
-    const result = insertWatchlist.run(userId, coinId, coinName, coinSymbol, notes)
+    `,
+      [userId, coinId, coinName, coinSymbol, notes],
+    )
 
     // Add alerts if provided
     if (alerts.length > 0) {
-      const insertAlert = db.prepare(`
-        INSERT INTO price_alerts (user_id, coin_id, coin_name, coin_symbol, alert_type, target_value)
-        VALUES (?, ?, ?, ?, ?, ?)
-      `)
-
       for (const alert of alerts) {
         if (alert.type && alert.value) {
-          insertAlert.run(userId, coinId, coinName, coinSymbol, alert.type, alert.value)
+          await executeQuery(
+            `
+            INSERT INTO price_alerts (user_id, coin_id, coin_name, coin_symbol, alert_type, target_value)
+            VALUES (?, ?, ?, ?, ?, ?)
+          `,
+            [userId, coinId, coinName, coinSymbol, alert.type, alert.value],
+          )
         }
       }
     }
@@ -124,7 +126,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: "Added to watchlist",
-      id: result.lastInsertRowid,
+      id: result.insertId,
     })
   } catch (error) {
     console.error("[v0] Watchlist POST error:", error)
@@ -143,17 +145,16 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Missing coinId" }, { status: 400 })
     }
 
-    const db = getDb()
-
     // Remove from watchlist
-    const deleteWatchlist = db.prepare("DELETE FROM watchlist_items WHERE user_id = ? AND coin_id = ?")
-    const result = deleteWatchlist.run(userId, coinId)
+    const result: any = await executeQuery("DELETE FROM watchlist_items WHERE user_id = ? AND coin_id = ?", [
+      userId,
+      coinId,
+    ])
 
     // Remove associated alerts
-    const deleteAlerts = db.prepare("DELETE FROM price_alerts WHERE user_id = ? AND coin_id = ?")
-    deleteAlerts.run(userId, coinId)
+    await executeQuery("DELETE FROM price_alerts WHERE user_id = ? AND coin_id = ?", [userId, coinId])
 
-    if (result.changes === 0) {
+    if (result.affectedRows === 0) {
       return NextResponse.json({ success: false, error: "Item not found in watchlist" }, { status: 404 })
     }
 

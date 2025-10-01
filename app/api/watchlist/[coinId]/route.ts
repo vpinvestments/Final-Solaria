@@ -1,13 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getDb } from "@/lib/db-local"
+import { executeQuery } from "@/lib/db"
 
 // PATCH /api/watchlist/[coinId] - Update watchlist item
 export async function PATCH(request: NextRequest, { params }: { params: { coinId: string } }) {
   try {
     const { userId = "1", notes, isFavorite } = await request.json()
     const { coinId } = params
-
-    const db = getDb()
 
     // Build update query dynamically
     const updates: string[] = []
@@ -27,7 +25,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { coinId
       return NextResponse.json({ success: false, error: "No fields to update" }, { status: 400 })
     }
 
-    updates.push("updated_date = datetime('now')")
+    updates.push("updated_date = NOW()")
     values.push(userId, coinId)
 
     const updateQuery = `
@@ -36,9 +34,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { coinId
       WHERE user_id = ? AND coin_id = ?
     `
 
-    const result = db.prepare(updateQuery).run(...values)
+    const result: any = await executeQuery(updateQuery, values)
 
-    if (result.changes === 0) {
+    if (result.affectedRows === 0) {
       return NextResponse.json({ success: false, error: "Item not found in watchlist" }, { status: 404 })
     }
 
