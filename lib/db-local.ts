@@ -20,7 +20,8 @@ try {
   initializeTables()
 } catch (error) {
   console.error("[v0] Failed to connect to local database:", error)
-  throw error
+  // Don't throw - allow module to load but log error
+  console.error("[v0] Database will not be available")
 }
 
 function initializeTables() {
