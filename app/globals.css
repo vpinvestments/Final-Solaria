@@ -4,71 +4,71 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Professional dark theme inspired by modern fintech platforms */
+  /* Updated to relaxing blue color scheme */
   --background: #0a0a0a;
   --foreground: #ffffff;
   --card: rgba(255, 255, 255, 0.03);
   --card-foreground: #ffffff;
   --popover: rgba(255, 255, 255, 0.05);
   --popover-foreground: #ffffff;
-  --primary: #f59e0b;
-  --primary-foreground: #000000;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
   --secondary: rgba(255, 255, 255, 0.08);
   --secondary-foreground: #ffffff;
   --muted: rgba(255, 255, 255, 0.04);
   --muted-foreground: rgba(255, 255, 255, 0.65);
-  --accent: #10b981;
+  --accent: #0ea5e9;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.08);
   --input: rgba(255, 255, 255, 0.05);
-  --ring: rgba(245, 158, 11, 0.4);
-  --chart-1: #f59e0b;
-  --chart-2: #10b981;
-  --chart-3: #3b82f6;
-  --chart-4: #8b5cf6;
-  --chart-5: #ef4444;
+  --ring: rgba(59, 130, 246, 0.4);
+  --chart-1: #3b82f6;
+  --chart-2: #0ea5e9;
+  --chart-3: #60a5fa;
+  --chart-4: #6366f1;
+  --chart-5: #8b5cf6;
   --radius: 0.75rem;
   --sidebar: rgba(255, 255, 255, 0.02);
   --sidebar-foreground: #ffffff;
   --sidebar-primary: rgba(255, 255, 255, 0.05);
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: rgba(245, 158, 11, 0.1);
+  --sidebar-accent: rgba(59, 130, 246, 0.1);
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.06);
-  --sidebar-ring: rgba(245, 158, 11, 0.3);
+  --sidebar-ring: rgba(59, 130, 246, 0.3);
 }
 
 .dark {
-  /* Enhanced dark mode with professional fintech aesthetic */
+  /* Updated dark mode with blue color scheme */
   --background: #0a0a0a;
   --foreground: #ffffff;
   --card: rgba(255, 255, 255, 0.03);
   --card-foreground: #ffffff;
   --popover: rgba(255, 255, 255, 0.05);
   --popover-foreground: #ffffff;
-  --primary: #f59e0b;
-  --primary-foreground: #000000;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
   --secondary: rgba(255, 255, 255, 0.08);
   --secondary-foreground: #ffffff;
   --muted: rgba(255, 255, 255, 0.04);
   --muted-foreground: rgba(255, 255, 255, 0.65);
-  --accent: #10b981;
+  --accent: #0ea5e9;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.08);
   --input: rgba(255, 255, 255, 0.05);
-  --ring: rgba(245, 158, 11, 0.4);
+  --ring: rgba(59, 130, 246, 0.4);
   --sidebar: rgba(255, 255, 255, 0.02);
   --sidebar-foreground: #ffffff;
   --sidebar-primary: rgba(255, 255, 255, 0.05);
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: rgba(245, 158, 11, 0.1);
+  --sidebar-accent: rgba(59, 130, 246, 0.1);
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.06);
-  --sidebar-ring: rgba(245, 158, 11, 0.3);
+  --sidebar-ring: rgba(59, 130, 246, 0.3);
 }
 
 @theme inline {
@@ -122,7 +122,7 @@
     position: relative;
   }
 
-  /* Subtle ambient lighting effect */
+  /* Updated ambient lighting to blue tones */
   body::before {
     content: "";
     position: fixed;
@@ -130,8 +130,8 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle at 25% 25%, rgba(245, 158, 11, 0.03) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.02) 0%, transparent 50%);
+    background: radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(14, 165, 233, 0.03) 0%, transparent 50%);
     animation: float 30s ease-in-out infinite;
     pointer-events: none;
     z-index: -1;
