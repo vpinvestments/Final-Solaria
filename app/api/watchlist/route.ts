@@ -8,6 +8,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get("userId") || "1" // Default to demo user
 
+    console.log("[v0] Fetching watchlist for user:", userId)
+
     // Get watchlist items with real-time price data
     const watchlistItems: any = await executeQuery(
       `
@@ -19,6 +21,8 @@ export async function GET(request: NextRequest) {
     `,
       [userId],
     )
+
+    console.log("[v0] Found watchlist items:", watchlistItems.length)
 
     // Get unique coin IDs to fetch current market data
     const coinIds = [...new Set(watchlistItems.map((item: any) => item.coin_id))]
@@ -83,23 +87,32 @@ export async function GET(request: NextRequest) {
 // POST /api/watchlist - Add item to watchlist
 export async function POST(request: NextRequest) {
   try {
-    const { userId = "1", coinId, coinName, coinSymbol, notes = "", alerts = [] } = await request.json()
+    const body = await request.json()
+    const { userId = "1", coinId, coinName, coinSymbol, notes = "", alerts = [] } = body
+
+    console.log("[v0] Adding to watchlist:", { userId, coinId, coinName, coinSymbol })
 
     if (!coinId || !coinName || !coinSymbol) {
+      console.log("[v0] Missing required fields")
       return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 })
     }
 
     // Check if item already exists
+    console.log("[v0] Checking for existing item...")
     const existing: any = await executeQuery("SELECT id FROM watchlist_items WHERE user_id = ? AND coin_id = ?", [
       userId,
       coinId,
     ])
 
+    console.log("[v0] Existing items found:", existing)
+
     if (existing.length > 0) {
+      console.log("[v0] Item already exists in watchlist")
       return NextResponse.json({ success: false, error: "Item already in watchlist" }, { status: 409 })
     }
 
     // Add to watchlist
+    console.log("[v0] Inserting new watchlist item...")
     const result: any = await executeQuery(
       `
       INSERT INTO watchlist_items (user_id, coin_id, coin_name, coin_symbol, notes)
@@ -108,8 +121,11 @@ export async function POST(request: NextRequest) {
       [userId, coinId, coinName, coinSymbol, notes],
     )
 
+    console.log("[v0] Insert result:", result)
+
     // Add alerts if provided
     if (alerts.length > 0) {
+      console.log("[v0] Adding alerts:", alerts.length)
       for (const alert of alerts) {
         if (alert.type && alert.value) {
           await executeQuery(
@@ -123,6 +139,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    console.log("[v0] Successfully added to watchlist")
     return NextResponse.json({
       success: true,
       message: "Added to watchlist",
@@ -130,7 +147,15 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error("[v0] Watchlist POST error:", error)
-    return NextResponse.json({ success: false, error: "Failed to add to watchlist" }, { status: 500 })
+    console.error("[v0] Error details:", error instanceof Error ? error.message : String(error))
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to add to watchlist",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 },
+    )
   }
 }
 

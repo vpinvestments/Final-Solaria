@@ -111,16 +111,24 @@ export function getDb() {
 
 export function executeQuery(query: string, params: any[] = []): any {
   try {
+    console.log("[v0] Executing query:", query.substring(0, 100))
+    console.log("[v0] Query params:", params)
+
     if (query.trim().toUpperCase().startsWith("SELECT")) {
       const stmt = db.prepare(query)
-      return stmt.all(...params)
+      const result = stmt.all(...params)
+      console.log("[v0] SELECT result count:", Array.isArray(result) ? result.length : 0)
+      return result
     } else {
       const stmt = db.prepare(query)
       const result = stmt.run(...params)
+      console.log("[v0] Query affected rows:", result.changes, "Last insert ID:", result.lastInsertRowid)
       return { insertId: result.lastInsertRowid, affectedRows: result.changes }
     }
   } catch (error) {
     console.error("[v0] Database query error:", error)
+    console.error("[v0] Failed query:", query)
+    console.error("[v0] Failed params:", params)
     throw error
   }
 }
