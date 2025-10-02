@@ -4,7 +4,6 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Dark blue background with orange and black elements */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -76,7 +75,6 @@
 }
 
 @theme inline {
-  /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -124,137 +122,139 @@
   }
 }
 
-/* Professional crypto platform styles */
-.crypto-card {
-  @apply backdrop-blur-sm bg-card border border-border rounded-xl p-6 
-         hover:bg-card/80 hover:border-border/60 transition-all duration-200 
-         shadow-sm hover:shadow-md;
-}
+/* Added professional crypto platform component styles */
+@layer components {
+  .crypto-card {
+    @apply backdrop-blur-sm bg-card border border-border rounded-xl p-6 
+           hover:bg-card/80 hover:border-border/60 transition-all duration-200 
+           shadow-sm hover:shadow-md;
+  }
 
-.glass-card {
-  @apply backdrop-blur-sm bg-card/50 border border-border rounded-xl shadow-lg;
-}
+  .glass-card {
+    @apply backdrop-blur-sm bg-card/50 border border-border rounded-xl shadow-lg;
+  }
 
-.professional-button {
-  @apply bg-primary hover:bg-primary/90 text-primary-foreground 
-         rounded-lg px-4 py-2 font-medium transition-all duration-200 
-         hover:scale-[1.02] active:scale-[0.98];
-}
+  .professional-button {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground 
+           rounded-lg px-4 py-2 font-medium transition-all duration-200 
+           hover:scale-[1.02] active:scale-[0.98];
+  }
 
-.watchlist-card {
-  @apply bg-card/40 backdrop-blur-sm border border-border/60 rounded-xl p-5
-         hover:bg-card/60 hover:border-border/80 transition-all duration-300
-         hover:shadow-lg hover:shadow-primary/5 group;
-}
+  .watchlist-card {
+    @apply bg-card/40 backdrop-blur-sm border border-border/60 rounded-xl p-5
+           hover:bg-card/60 hover:border-border/80 transition-all duration-300
+           hover:shadow-lg hover:shadow-primary/5 group;
+  }
 
-.stats-card {
-  @apply bg-gradient-to-br from-card/60 to-card/40 backdrop-blur-sm 
-         border border-border/60 rounded-xl shadow-lg;
-}
+  .stats-card {
+    @apply bg-gradient-to-br from-card/60 to-card/40 backdrop-blur-sm 
+           border border-border/60 rounded-xl shadow-lg;
+  }
 
-.search-input {
-  @apply w-full pl-11 pr-4 py-3 bg-card/50 border border-border/60 rounded-xl
-         text-foreground placeholder:text-muted-foreground
-         focus:bg-card/70 focus:border-primary/50 focus:ring-2 focus:ring-primary/20
-         transition-all duration-200;
-}
+  .search-input {
+    @apply w-full pl-11 pr-4 py-3 bg-card/50 border border-border/60 rounded-xl
+           text-foreground placeholder:text-muted-foreground
+           focus:bg-card/70 focus:border-primary/50 focus:ring-2 focus:ring-primary/20
+           transition-all duration-200;
+  }
 
-.filter-chip {
-  @apply px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
-         hover:scale-105 active:scale-95 cursor-pointer;
-}
+  .filter-chip {
+    @apply px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+           hover:scale-105 active:scale-95 cursor-pointer;
+  }
 
-.filter-chip-active {
-  @apply bg-primary text-primary-foreground shadow-lg shadow-primary/20;
-}
+  .filter-chip-active {
+    @apply bg-primary text-primary-foreground shadow-lg shadow-primary/20;
+  }
 
-.filter-chip-inactive {
-  @apply bg-card/50 text-muted-foreground hover:bg-card/70 border border-border/50;
-}
+  .filter-chip-inactive {
+    @apply bg-card/50 text-muted-foreground hover:bg-card/70 border border-border/50;
+  }
 
-.watchlist-grid {
-  @apply grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3;
-}
+  .watchlist-grid {
+    @apply grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3;
+  }
 
-.watchlist-header {
-  @apply flex items-center justify-between mb-4 pb-4 border-b border-border/40;
-}
+  .watchlist-header {
+    @apply flex items-center justify-between mb-4 pb-4 border-b border-border/40;
+  }
 
-.coin-info {
-  @apply flex items-center gap-4;
-}
+  .coin-info {
+    @apply flex items-center gap-4;
+  }
 
-.coin-logo {
-  @apply h-14 w-14 rounded-full border-2 border-border/50 group-hover:border-primary/30 
-         transition-all duration-300 shadow-sm;
-}
+  .coin-logo {
+    @apply h-14 w-14 rounded-full border-2 border-border/50 group-hover:border-primary/30 
+           transition-all duration-300 shadow-sm;
+  }
 
-.coin-details {
-  @apply flex flex-col gap-1;
-}
+  .coin-details {
+    @apply flex flex-col gap-1;
+  }
 
-.coin-name {
-  @apply text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300;
-}
+  .coin-name {
+    @apply text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300;
+  }
 
-.coin-symbol {
-  @apply text-sm font-mono text-muted-foreground uppercase tracking-wider;
-}
+  .coin-symbol {
+    @apply text-sm font-mono text-muted-foreground uppercase tracking-wider;
+  }
 
-.price-section {
-  @apply text-right;
-}
+  .price-section {
+    @apply text-right;
+  }
 
-.current-price {
-  @apply text-2xl font-bold font-mono text-foreground;
-}
+  .current-price {
+    @apply text-2xl font-bold font-mono text-foreground;
+  }
 
-.price-change {
-  @apply text-sm font-medium flex items-center gap-1 justify-end mt-1;
-}
+  .price-change {
+    @apply text-sm font-medium flex items-center gap-1 justify-end mt-1;
+  }
 
-.metrics-grid {
-  @apply grid grid-cols-3 gap-4 mb-4;
-}
+  .metrics-grid {
+    @apply grid grid-cols-3 gap-4 mb-4;
+  }
 
-.metric-item {
-  @apply flex flex-col gap-1;
-}
+  .metric-item {
+    @apply flex flex-col gap-1;
+  }
 
-.metric-label {
-  @apply text-xs text-muted-foreground uppercase tracking-wide;
-}
+  .metric-label {
+    @apply text-xs text-muted-foreground uppercase tracking-wide;
+  }
 
-.metric-value {
-  @apply text-sm font-semibold font-mono text-foreground;
-}
+  .metric-value {
+    @apply text-sm font-semibold font-mono text-foreground;
+  }
 
-.sparkline-container {
-  @apply h-16 mb-4 relative overflow-hidden rounded-lg bg-muted/20;
-}
+  .sparkline-container {
+    @apply h-16 mb-4 relative overflow-hidden rounded-lg bg-muted/20;
+  }
 
-.action-bar {
-  @apply flex items-center justify-between pt-4 border-t border-border/40;
-}
+  .action-bar {
+    @apply flex items-center justify-between pt-4 border-t border-border/40;
+  }
 
-.alert-indicator {
-  @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium
-         bg-primary/15 text-primary border border-primary/30 animate-pulse;
-}
+  .alert-indicator {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium
+           bg-primary/15 text-primary border border-primary/30 animate-pulse;
+  }
 
-.favorite-button {
-  @apply p-2 rounded-lg hover:bg-muted/50 transition-all duration-200
-         hover:scale-110 active:scale-95;
-}
+  .favorite-button {
+    @apply p-2 rounded-lg hover:bg-muted/50 transition-all duration-200
+           hover:scale-110 active:scale-95;
+  }
 
-.search-bar {
-  @apply relative flex-1 max-w-md;
-}
+  .search-bar {
+    @apply relative flex-1 max-w-md;
+  }
 
-.empty-state {
-  @apply flex flex-col items-center justify-center py-16 text-center;
-}
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-16 text-center;
+  }
 
-.loading-spinner {
-  @apply h-8 w-8 animate-spin text-primary;
+  .loading-spinner {
+    @apply h-8 w-8 animate-spin text-primary;
+  }
 }
