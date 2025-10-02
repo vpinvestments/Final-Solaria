@@ -22,8 +22,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}>
+      <body className="font-sans">
         <Suspense fallback={<div>Loading...</div>}>
           <Header />
           <div className="flex">
