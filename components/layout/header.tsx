@@ -10,7 +10,7 @@ import { searchCryptocurrencies, type CryptoCurrency } from "@/lib/crypto-api"
 import { useRouter } from "next/navigation"
 
 export function Header() {
-  const [isDark, setIsDark] = useState(false)
+  const [isDark, setIsDark] = useState(true) // Default to dark mode for liquid glass effect
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<CryptoCurrency[]>([])
@@ -19,6 +19,10 @@ export function Header() {
   const searchRef = useRef<HTMLDivElement>(null)
   const mobileSearchRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+
+  useEffect(() => {
+    document.documentElement.classList.add("dark")
+  }, [])
 
   const toggleTheme = () => {
     setIsDark(!isDark)
@@ -93,13 +97,13 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/10 border-b border-white/20 shadow-lg shadow-black/10">
+      <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-gradient-to-r from-primary/20 via-primary/10 to-accent/20 border-b border-border/50 shadow-lg shadow-primary/10">
         <div className="flex h-16 items-center justify-between">
           {/* Logo - positioned to align with sidebar */}
           <div className="flex items-center">
             <div className="w-64 xl:w-64 flex items-center px-4">
               <Link href="/" className="flex items-center space-x-2 floating-element">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20 backdrop-blur-md border border-white/30 shadow-lg">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl glass-card shadow-primary/20">
                   <Image
                     src="/images/solaria-icon.png"
                     alt="Solaria World Logo"
@@ -108,7 +112,7 @@ export function Header() {
                     className="rounded-full"
                   />
                 </div>
-                <span className="text-lg sm:text-xl font-bold text-white drop-shadow-lg">
+                <span className="text-lg sm:text-xl font-bold gradient-text drop-shadow-lg">
                   <span className="hidden sm:inline">Solaria World</span>
                   <span className="sm:hidden">Solaria</span>
                 </span>
@@ -122,25 +126,25 @@ export function Header() {
             <nav className="hidden lg:flex items-center space-x-6 mr-8">
               <Link
                 href="/"
-                className="text-sm font-medium text-white/90 hover:text-white hover:drop-shadow-lg transition-all duration-300"
+                className="text-sm font-medium text-foreground hover:text-primary hover:drop-shadow-lg transition-all duration-300"
               >
                 Markets
               </Link>
               <Link
                 href="/portfolio"
-                className="text-sm font-medium text-white/70 hover:text-white hover:drop-shadow-lg transition-all duration-300"
+                className="text-sm font-medium text-muted-foreground hover:text-primary hover:drop-shadow-lg transition-all duration-300"
               >
                 Portfolio
               </Link>
               <Link
                 href="/trading"
-                className="text-sm font-medium text-white/70 hover:text-white hover:drop-shadow-lg transition-all duration-300"
+                className="text-sm font-medium text-muted-foreground hover:text-primary hover:drop-shadow-lg transition-all duration-300"
               >
                 Trading
               </Link>
               <Link
                 href="/news"
-                className="text-sm font-medium text-white/70 hover:text-white hover:drop-shadow-lg transition-all duration-300"
+                className="text-sm font-medium text-muted-foreground hover:text-primary hover:drop-shadow-lg transition-all duration-300"
               >
                 News
               </Link>
@@ -149,7 +153,7 @@ export function Header() {
             {/* Search - Desktop */}
             <div className="hidden lg:flex items-center flex-1 max-w-md">
               <div className="relative w-full" ref={searchRef}>
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search cryptocurrencies..."
                   className="glass-input pl-10"
@@ -158,16 +162,16 @@ export function Header() {
                 />
 
                 {showSearchResults && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-black/90 backdrop-blur-xl border border-white/20 rounded-lg shadow-2xl max-h-96 overflow-y-auto z-50">
+                  <div className="absolute top-full left-0 right-0 mt-2 glass-card max-h-96 overflow-y-auto z-50 rounded-lg">
                     {isSearching ? (
-                      <div className="p-4 text-center text-white/60">Searching...</div>
+                      <div className="p-4 text-center text-muted-foreground">Searching...</div>
                     ) : searchResults.length > 0 ? (
                       <div className="py-2">
                         {searchResults.map((coin) => (
                           <button
                             key={coin.id}
                             onClick={() => handleSearchResultClick(coin)}
-                            className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-white/10 transition-colors"
+                            className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-primary/10 transition-colors rounded-md"
                           >
                             <img
                               src={coin.image || "/placeholder.svg"}
@@ -175,12 +179,12 @@ export function Header() {
                               className="w-8 h-8 rounded-full"
                             />
                             <div className="flex-1 text-left">
-                              <div className="text-white font-medium">{coin.name}</div>
-                              <div className="text-white/60 text-sm">{coin.symbol}</div>
+                              <div className="text-foreground font-medium">{coin.name}</div>
+                              <div className="text-muted-foreground text-sm">{coin.symbol}</div>
                             </div>
                             <div className="text-right">
-                              <div className="text-white">{formatPrice(coin.price)}</div>
-                              <div className={`text-sm ${coin.change24h >= 0 ? "text-green-400" : "text-red-400"}`}>
+                              <div className="text-foreground">{formatPrice(coin.price)}</div>
+                              <div className={coin.change24h >= 0 ? "glow-green text-sm" : "glow-red text-sm"}>
                                 {coin.change24h >= 0 ? "+" : ""}
                                 {coin.change24h.toFixed(2)}%
                               </div>
@@ -190,7 +194,9 @@ export function Header() {
                       </div>
                     ) : (
                       searchQuery.trim() && (
-                        <div className="p-4 text-center text-white/60">No results found for "{searchQuery}"</div>
+                        <div className="p-4 text-center text-muted-foreground">
+                          No results found for "{searchQuery}"
+                        </div>
                       )
                     )}
                   </div>
@@ -214,12 +220,12 @@ export function Header() {
 
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={toggleMobileMenu} />
-          <div className="fixed top-16 left-0 right-0 bg-black/90 backdrop-blur-xl border-b border-white/20 shadow-2xl">
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={toggleMobileMenu} />
+          <div className="fixed top-16 left-0 right-0 glass-card border-b shadow-2xl">
             <div className="container mx-auto px-4 py-6 space-y-4">
               {/* Mobile Search */}
               <div className="relative" ref={mobileSearchRef}>
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder="Search cryptocurrencies..."
                   className="glass-input pl-10 w-full"
@@ -228,16 +234,16 @@ export function Header() {
                 />
 
                 {showSearchResults && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-black/90 backdrop-blur-xl border border-white/20 rounded-lg shadow-2xl max-h-64 overflow-y-auto z-50">
+                  <div className="absolute top-full left-0 right-0 mt-2 glass-card max-h-64 overflow-y-auto z-50 rounded-lg">
                     {isSearching ? (
-                      <div className="p-4 text-center text-white/60">Searching...</div>
+                      <div className="p-4 text-center text-muted-foreground">Searching...</div>
                     ) : searchResults.length > 0 ? (
                       <div className="py-2">
                         {searchResults.map((coin) => (
                           <button
                             key={coin.id}
                             onClick={() => handleSearchResultClick(coin)}
-                            className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-white/10 transition-colors"
+                            className="w-full px-4 py-3 flex items-center space-x-3 hover:bg-primary/10 transition-colors rounded-md"
                           >
                             <img
                               src={coin.image || "/placeholder.svg"}
@@ -245,12 +251,12 @@ export function Header() {
                               className="w-6 h-6 rounded-full"
                             />
                             <div className="flex-1 text-left">
-                              <div className="text-white text-sm font-medium">{coin.name}</div>
-                              <div className="text-white/60 text-xs">{coin.symbol}</div>
+                              <div className="text-foreground text-sm font-medium">{coin.name}</div>
+                              <div className="text-muted-foreground text-xs">{coin.symbol}</div>
                             </div>
                             <div className="text-right">
-                              <div className="text-white text-sm">{formatPrice(coin.price)}</div>
-                              <div className={`text-xs ${coin.change24h >= 0 ? "text-green-400" : "text-red-400"}`}>
+                              <div className="text-foreground text-sm">{formatPrice(coin.price)}</div>
+                              <div className={coin.change24h >= 0 ? "glow-green text-xs" : "glow-red text-xs"}>
                                 {coin.change24h >= 0 ? "+" : ""}
                                 {coin.change24h.toFixed(2)}%
                               </div>
@@ -260,7 +266,7 @@ export function Header() {
                       </div>
                     ) : (
                       searchQuery.trim() && (
-                        <div className="p-4 text-center text-white/60 text-sm">
+                        <div className="p-4 text-center text-muted-foreground text-sm">
                           No results found for "{searchQuery}"
                         </div>
                       )
@@ -273,28 +279,28 @@ export function Header() {
               <nav className="space-y-2">
                 <Link
                   href="/"
-                  className="block px-4 py-3 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300"
+                  className="block px-4 py-3 text-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-300"
                   onClick={toggleMobileMenu}
                 >
                   Markets
                 </Link>
                 <Link
                   href="/portfolio"
-                  className="block px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300"
+                  className="block px-4 py-3 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-300"
                   onClick={toggleMobileMenu}
                 >
                   Portfolio
                 </Link>
                 <Link
                   href="/trading"
-                  className="block px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300"
+                  className="block px-4 py-3 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-300"
                   onClick={toggleMobileMenu}
                 >
                   Trading
                 </Link>
                 <Link
                   href="/news"
-                  className="block px-4 py-3 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300"
+                  className="block px-4 py-3 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all duration-300"
                   onClick={toggleMobileMenu}
                 >
                   News
